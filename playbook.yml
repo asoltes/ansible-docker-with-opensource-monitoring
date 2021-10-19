@@ -7,6 +7,5 @@
   roles:
     - geerlingguy.pip
     - geerlingguy.git
-    # - geerlingguy.docker
     # - docker-cacti
     - docker-zabbix

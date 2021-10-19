@@ -3,7 +3,6 @@
   ansible.builtin.git:
     repo: https://github.com/zabbix/zabbix-docker.git
     dest: /opt/docker-zabbix
-    single_branch: yes
     version: '{{ zabbix_branch_version }}'
     force: yes
 
@@ -11,25 +10,12 @@
   template:
     src: docker-compose_v3_alpine_mysql_latest.j2
     dest: '{{ docker_compose_dir }}/{{ zabbix_compose_file }}'
+    owner: root
+    group: root
+    mode: 0644
+  become: true
 
-# - name: rename {{ cacti_deployment }} to docker-compose.yml
-#   command: mv {{ docker_compose_dir }}/{{ zabbix_compose_file }} {{ docker_compose_dir }}/docker-compose.yml
-
-- name: Running `docker-compose up -d` please wait ...
+- name: bringing up zabbix containers by "docker-compose -f {{ zabbix_compose_file }} up -d "
   community.docker.docker_compose:
     project_src: '{{ docker_compose_dir }}'
     files: '{{ zabbix_compose_file }}'
-  register: output
-
-
-
-# - name: Create and start services
-#   community.docker.docker_compose:
-#     project_src: '{{ docker_compose_dir }}'
-#   register: output
-
-# - name: Run `docker-compose up` again
-#   community.docker.docker_compose:
-#     project_src: '{{ docker_compose_dir }}'
-#     build: no
-#   register: output
